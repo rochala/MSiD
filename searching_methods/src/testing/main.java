@@ -37,19 +37,20 @@ public class main
 
     public static void main(String args[])
     {
-        int number_of_tests = 10, test_size = 1900;
-        ArrayList<ArrayList<Integer>> tests = new ArrayList<ArrayList<Integer>>(number_of_tests);
+        int number_of_tests = 10, test_size = 10000;
+        ArrayList<ArrayList<Integer>> set_of_tests = new ArrayList<ArrayList<Integer>>(number_of_tests);
 
         for (int i = 0; i < number_of_tests; i++)
-            tests.add(randomize_new_array(test_size));
+            set_of_tests.add(randomize_new_array(test_size));
 
         bubble bubble_sort = new bubble();
         insert insert_sort = new insert();
+        select select_sort = new select();
         quick quick_sort = new quick();
 
-        System.out.println(estimate_sorting_duration(bubble_sort, tests));
-        System.out.println(estimate_sorting_duration(insert_sort, tests));
-        System.out.println(estimate_sorting_duration(quick_sort, tests));
-//        System.out.println(estimate_sorting_duration(quick_sort, tests));
+        System.out.println(estimate_sorting_duration(bubble_sort, set_of_tests) + " [ms]");
+        System.out.println(estimate_sorting_duration(insert_sort, set_of_tests) + " [ms]");
+        System.out.println(estimate_sorting_duration(select_sort, set_of_tests) + " [ms]");
+        System.out.println(estimate_sorting_duration(quick_sort, set_of_tests) + " [ms]");
     }
 }
