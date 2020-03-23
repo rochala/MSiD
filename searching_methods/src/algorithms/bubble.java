@@ -10,14 +10,14 @@ public class bubble extends sorting_algorithm
     }
 
     @Override
-    public void sort_out()
+    public ArrayList<Integer> sort_out()
     {
+        int size = to_be_sorted.size();
+        for(int i = 0; i < size; i++)
+            for(int j = 0; j < size - 1; j++)
+                if(to_be_sorted.get(j) > to_be_sorted.get(j + 1))
+                    swap(j, j + 1);
 
-    }
-
-    @Override
-    public void sort_out(ArrayList<Integer> to_be_sorted)
-    {
-
+        return to_be_sorted;
     }
 }
