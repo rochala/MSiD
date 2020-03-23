@@ -8,11 +8,13 @@ public abstract class sorting_algorithm
 
     public sorting_algorithm(ArrayList<Integer> to_be_sorted)
     {
-        this.to_be_sorted = to_be_sorted;
+        this.to_be_sorted = new ArrayList<>(to_be_sorted.size());
+        this.to_be_sorted.addAll(to_be_sorted);
     }
     public void change_source(ArrayList<Integer> to_be_sorted)
     {
-        this.to_be_sorted = to_be_sorted;
+        this.to_be_sorted = new ArrayList<>(to_be_sorted.size());
+        this.to_be_sorted.addAll(to_be_sorted);
     }
 
     void swap(int index_1, int index_2)
@@ -23,7 +25,7 @@ public abstract class sorting_algorithm
     }
     public ArrayList<Integer> sort_out(ArrayList<Integer> to_be_sorted)
     {
-        this.to_be_sorted = to_be_sorted;
+        change_source(to_be_sorted);
         return sort_out();
     }
 
