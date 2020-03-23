@@ -24,16 +24,30 @@ public class main
         System.out.println("🧶-----------------------🐈");
     }
 
+    static float estimate_sorting_duration(sorting_algorithm algorithm, ArrayList<ArrayList<Integer>> arrays)
+    {
+        if(arrays.isEmpty()) return -1;
+
+        long start_time = System.currentTimeMillis();
+
+        for (ArrayList<Integer> array : arrays)
+            algorithm.sort_out(array);
+
+        return (float)(System.currentTimeMillis() - start_time) / arrays.size();
+    }
+
     public static void main(String args[])
     {
-        ArrayList<Integer> array_for_tests = randomize_new_array(100);
+        int number_of_tests = 10, test_size = 1900;
+        ArrayList<ArrayList<Integer>> tests = new ArrayList<ArrayList<Integer>>(number_of_tests);
 
-        print_array_out(array_for_tests);
-        bubble bubble_sort = new bubble(array_for_tests);
-        print_array_out(bubble_sort.sort_out());
+        for (int i = 0; i < number_of_tests; i++)
+            tests.add(randomize_new_array(test_size));
 
-        print_array_out(array_for_tests);
-        insert insert_sort = new insert(array_for_tests);
-        print_array_out(insert_sort.sort_out());
+        bubble bubble_sort = new bubble();
+        insert insert_sort = new insert();
+
+        System.out.println(estimate_sorting_duration(bubble_sort, tests));
+        System.out.println(estimate_sorting_duration(insert_sort, tests));
     }
 }

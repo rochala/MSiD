@@ -4,6 +4,11 @@ import java.util.ArrayList;
 
 public class bubble extends sorting_algorithm
 {
+    public bubble()
+    {
+        super();
+    }
+
     public bubble(ArrayList<Integer> source)
     {
         super(source);

@@ -4,6 +4,11 @@ import java.util.ArrayList;
 
 public class insert extends sorting_algorithm
 {
+    public insert()
+    {
+        super();
+    }
+
     public insert(ArrayList<Integer> to_be_sorted)
     {
         super(to_be_sorted);

@@ -6,6 +6,11 @@ public abstract class sorting_algorithm
 {
     ArrayList<Integer> to_be_sorted;
 
+    public sorting_algorithm()
+    {
+        this.to_be_sorted = new ArrayList<>();
+    }
+
     public sorting_algorithm(ArrayList<Integer> to_be_sorted)
     {
         this.to_be_sorted = new ArrayList<>(to_be_sorted.size());
