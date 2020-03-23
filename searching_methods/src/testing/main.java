@@ -7,7 +7,7 @@ import java.util.Random;
 
 public class main
 {
-    public static Random seed = new Random();
+    static Random seed = new Random();
     static ArrayList<Integer> randomize_new_array(int size)
     {
         ArrayList<Integer> new_array = new ArrayList<Integer>(size);
@@ -17,9 +17,8 @@ public class main
 
     static void print_array_out(ArrayList<Integer> array)
     {
-        int size = array.size();
-        for (int i = 0; i < size; i++)
-            System.out.println(array.get(i));
+        for (Integer integer : array)
+            System.out.println(integer);
 
         System.out.println("🧶-----------------------🐈");
     }
@@ -46,8 +45,11 @@ public class main
 
         bubble bubble_sort = new bubble();
         insert insert_sort = new insert();
+        quick quick_sort = new quick();
 
         System.out.println(estimate_sorting_duration(bubble_sort, tests));
         System.out.println(estimate_sorting_duration(insert_sort, tests));
+        System.out.println(estimate_sorting_duration(quick_sort, tests));
+//        System.out.println(estimate_sorting_duration(quick_sort, tests));
     }
 }
