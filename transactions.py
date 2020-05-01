@@ -36,7 +36,7 @@ def analysis(crypto_currency, currency, delay, lines):
             time.sleep(1)
     except KeyboardInterrupt:
         exit(0)
-    analysis(crypto_currency, currency, delay, lines)
+    return analysis(crypto_currency, currency, delay, lines)
 
 
 def main():
