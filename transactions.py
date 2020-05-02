@@ -22,14 +22,13 @@ def run_algorithm():
     global offers
     for currency in currencies:
         offers = {}
-        print(currency)
         fetch_data(currency[1])
         time.sleep(24)  # public api limit mitiagion
 
 
 def fetch_data(currency):
     error_flag = False
-    for i in range(0, 4):
+    for i in range(len(apis)):
         if not update_trade(i, currency):
             error_flag = True
     if not error_flag:
@@ -46,7 +45,6 @@ def update_trade(api_index, currency):
         )
         trades = request.json()
         if "error" not in trades:
-            print(trades[0]["orderBooks"][0]["orderBook"]["asks"][0]["price"])
             offers[api_index] = (
                 trades[0]["orderBooks"][0]["orderBook"]["asks"][0],
                 trades[0]["orderBooks"][0]["orderBook"]["bids"][0],
@@ -61,53 +59,53 @@ def update_trade(api_index, currency):
 
 def update_wallet(currency):
     global wallet
-    result = calculate_profit()
-    if result["sell"][2] > 0:
-        wallet += result["sell"][2]
+    (best_buy_index, best_sell_index) = get_best_trades()
+    result = calculate_profit(best_buy_index, best_sell_index)
+    if result[1] > 0:
+        wallet += result[1]
         print(
-            f'Bought {result["buy"][0]} of {currency} '
-            + f"with rate of {result['buy'][1]} "
-            + f"from {result['buy'][2]} "
-            + f"and sold it at {result['sell'][0]} "
-            + f"with rate of {result['sell'][1]} "
-            + f"with total profit of {result['sell'][2]:>.4f} USD"
+            f"Bought {result[0]:>.5f} of {currency} "
+            + f"with rate of {offers[best_buy_index][0]['price']} "
+            + f"from {apis[best_buy_index][1]} "
+            + f"and sold it at {apis[best_sell_index][1]} "
+            + f"with rate of {offers[best_sell_index][1]['price']} "
+            + f"with total profit of {result[1]:>.4f} USD"
         )
     else:
         print("Unprofitable transaction")
 
 
-def calculate_profit():
+def calculate_profit(best_buy_index, best_sell_index):
     global wallet
-    (best_buy_value, best_sell_value) = get_best_trades()
-    quantity = float(min(best_buy_value[0]["quantity"], best_sell_value[0]["quantity"]))
-    max_quantity = wallet / float(best_buy_value[0]["price"])
+    quantity = float(
+        min(
+            offers[best_buy_index][0]["quantity"],
+            offers[best_sell_index][1]["quantity"],
+        )
+    )
+    max_quantity = wallet / float(offers[best_buy_index][0]["price"])
     if quantity > max_quantity:
         quantity = max_quantity
-    profit = float(best_sell_value[0]["price"]) - float(best_buy_value[0]["price"])
+    profit = float(offers[best_sell_index][1]["price"]) - float(
+        offers[best_buy_index][0]["price"]
+    )
     profit *= float(quantity)
-    return {
-        "buy": (quantity, best_buy_value[0]["price"], apis[best_buy_value[1]][1],),
-        "sell": (
-            apis[best_sell_value[1]][1],
-            best_sell_value[0]["price"],
-            float(profit),
-        ),
-    }
+    return (quantity, float(profit))
 
 
 def get_best_trades():
-    best_buy_value = (offers[0][0], 0)
-    best_sell_value = (offers[0][1], 0)
-    for i in range(1, 4):
-        if offers[i][0]["price"] < best_buy_value[0]["price"]:
-            best_buy_value = (offers[i][0], i)
-        if offers[i][1]["price"] > best_sell_value[0]["price"]:
-            best_sell_value = (offers[i][1], i)
-    return (best_buy_value, best_sell_value)
+    best_buy_index = 0
+    best_sell_index = 0
+    for i in range(1, len(apis)):
+        if offers[i][0]["price"] < offers[best_buy_index][0]["price"]:
+            best_buy_index = i
+        if offers[i][1]["price"] > offers[best_sell_index][1]["price"]:
+            best_sell_index = i
+    return (best_buy_index, best_sell_index)
 
 
 def apply_fee():
-    for i in range(0, 4):
+    for i in range(len(apis)):
         offers[i][0]["price"] = float(offers[i][0]["price"]) * (fees[i] + 1)
         offers[i][1]["price"] = float(offers[i][1]["price"]) * (1 - fees[i])
 
@@ -116,7 +114,7 @@ def fetch_fee():
     try:
         request = requests.get("https://dev-api.shrimpy.io/v1/list_exchanges")
         unparsed_fees = request.json()
-        for i in range(0, 4):
+        for i in range(len(apis)):
             for market in unparsed_fees:
                 if market["exchange"] == apis[i][1]:
                     fees[i] = market["worstCaseFee"]
