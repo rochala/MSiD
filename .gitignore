@@ -1,0 +1,4 @@
+.history/*
+.metals/*
+.mypy_cache/*
+
