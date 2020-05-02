@@ -23,6 +23,7 @@ def run_algorithm():
     for currency in currencies:
         offers = {}
         if fetch_data(currency[1]):
+            apply_fee()
             update_wallet(currency[1])
         else:
             print("Couldn't finish fetching data")
@@ -115,7 +116,7 @@ def fetch_fee():
         unparsed_fees = request.json()
         for i in range(len(apis)):
             for market in unparsed_fees:
-                if market["exchange"] == apis[i][1]:
+                if market["exchange"] == apis[i][1].lower():
                     fees[i] = market["worstCaseFee"]
     except requests.exceptions.RequestException as e:
         print(e)
@@ -125,6 +126,7 @@ def main():
     global wallet
     load_config()
     fetch_fee()
+    print(fees)
     while True:
         run_algorithm()
         print(f"Wallet is worth {wallet} USD")
