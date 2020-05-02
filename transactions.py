@@ -22,19 +22,18 @@ def run_algorithm():
     global offers
     for currency in currencies:
         offers = {}
-        fetch_data(currency[1])
+        if fetch_data(currency[1]):
+            update_wallet(currency[1])
+        else:
+            print("Couldn't finish fetching data")
         time.sleep(24)  # public api limit mitiagion
 
 
 def fetch_data(currency):
-    error_flag = False
     for i in range(len(apis)):
         if not update_trade(i, currency):
-            error_flag = True
-    if not error_flag:
-        update_wallet(currency)
-    else:
-        print("Couldn't finish fetching data")
+            return False
+    return True
 
 
 def update_trade(api_index, currency):
