@@ -196,7 +196,6 @@ def main():
     )
 
     args = parser.parse_args()
-    print(args)
     if len(sys.argv) == 1:
         print_wallet()
     elif args.list is True:
